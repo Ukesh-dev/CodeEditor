@@ -1,0 +1,25 @@
+#iframe-wrapper {
+  position: relative;
+  height: 100%;
+  flex-grow: 1;
+  /* margin-top: 10px; */
+}
+
+/* @media (max-width: 500) {
+  #iframe-wrapper {
+    width: 100vw;
+  }
+} */
+
+#iframe-wrapper > iframe {
+  background: white;
+  height: 100%;
+  width: 100%;
+}
+.react-draggable-transparent-selection #iframe-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 0;
+  background: red;
+  opacity: 0;
+}

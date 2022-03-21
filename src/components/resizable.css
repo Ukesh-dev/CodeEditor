@@ -1,0 +1,36 @@
+.react-resizable-handle {
+  display: block;
+  background-color: #37414b;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.react-resizable-handle-s {
+  height: 10px;
+  width: 100%;
+  cursor: row-resize;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);
+}
+
+.resize-horizontal {
+  display: flex;
+}
+
+/* @media (max-width: 400px) {
+  .resizeWindow {
+    flex-direction: column;
+  }
+} */
+
+.react-resizable-handle-e {
+  height: 100%;
+  width: 10px;
+  cursor: row-resize;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);
+}
+
+/* @media only screen and (max-width: 300px) {
+  .react-resizable-handle-e {
+    display: none;
+  }
+} */
