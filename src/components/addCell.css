@@ -1,0 +1,54 @@
+.divider {
+  position: relative;
+  margin-block: 1rem;
+  padding: 1rem;
+  padding-inline: 3rem;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in 0.1s;
+  animation: visibility 1s ease-in;
+}
+
+@keyframes visibility {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  65% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.divider:hover {
+  opacity: 1;
+}
+
+.divider.visible {
+  opacity: 1;
+}
+
+.divider span {
+  margin: 0.3em;
+}
+.divider > * {
+  margin: 0 0.5rem;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 90%;
+  height: 0.5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  top: 50%;
+}

@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
-import "bulmaswatch/superhero/bulmaswatch.min.css";
+// import "bulmaswatch/superhero/bulmaswatch.min.css";
 import bundle from "../bundle";
 import CodeEditor from "../components/CodeEditor";
 import Preview from "../components/preview";
 import Resizeable from "./Resizeable";
 import McodeCell from "./m.CodeCell";
+import { useActions } from "../hooks/useActionCreator";
+import { Cell } from "../state";
 
-const CodeCell = () => {
+interface CellProps {
+  cell: Cell;
+}
+
+const CodeCell: React.FC<CellProps> = ({ cell }) => {
   const [code, setCode] = useState<string>("");
-  const [input, setInput] = useState<string>("");
+  // const [input, setInput] = useState<string>("");
   const [collapse, setCollapse] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const { updateCell } = useActions();
 
   // const handleClick = async () => {
   //   console.log("inside bundle");
@@ -21,12 +28,13 @@ const CodeCell = () => {
   // };
   useEffect(() => {
     const timer = setTimeout(async () => {
-      const transpiledCode = await bundle(input);
+      console.log("inside content:" + cell.content);
+      const transpiledCode = await bundle(cell.content);
       setCode(transpiledCode.code);
       setError(transpiledCode.error);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [input]);
+  }, [cell.content]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 500px)");
@@ -42,7 +50,7 @@ const CodeCell = () => {
     return () => window.removeEventListener("resize", myFunc);
   }, []);
 
-  const defaultValue = "const a = 1";
+  // const defaultValue = "const a = 1";
   return (
     <>
       {/* //! from here to */}
@@ -59,8 +67,8 @@ const CodeCell = () => {
           >
             <Resizeable direction="horizontal">
               <CodeEditor
-                defaultValue={defaultValue}
-                onChange={(value) => setInput(value)}
+                defaultValue={cell.content}
+                onChange={(value) => updateCell(cell.id, value)}
               />
             </Resizeable>
             {/* {!collapse && <Preview code={code} bundlingStatus={error} />} */}

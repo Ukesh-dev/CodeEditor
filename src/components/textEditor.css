@@ -1,0 +1,29 @@
+.w-md-editor {
+  margin-top: 0.9rem;
+}
+
+.w-md-editor-bar svg {
+  display: none;
+}
+
+.w-md-editor-bar {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=);
+  height: 11px;
+  cursor: row-resize;
+  background-color: #37414b;
+  background-repeat: no-repeat;
+  width: 100%;
+  background-position: 50%;
+}
+.w-md-editor-toolbar {
+  position: relative;
+  z-index: 100;
+}
+
+.card-content {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.wmde-markdown {
+  background: transparent;
+}
