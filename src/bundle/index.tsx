@@ -24,9 +24,9 @@ const bundle = async (rawCode: string) => {
         "process.env.NODE_ENV": '"production"',
       },
     });
-    return { code: transpiledCode.outputFiles[0].text, error: "" };
+    return { code: transpiledCode.outputFiles[0].text, err: "" };
   } catch (error) {
-    return { code: "", error: `${error}` };
+    return { code: "", err: `${error}` };
   }
 };
 

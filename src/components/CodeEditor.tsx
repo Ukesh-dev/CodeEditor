@@ -22,7 +22,6 @@ function CodeEditor({ defaultValue, onChange }: CodeEditorProps) {
     event: monaco.editor.IModelContentChangedEvent
   ) => {
     if (value) {
-      console.log(value);
       onChange(value);
     }
   };

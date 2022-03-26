@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
-import bundle from "../bundle";
+import { useEffect } from "react";
 import CodeEditor from "../components/CodeEditor";
 import Preview from "../components/preview";
+import { useActions } from "../hooks/useActionCreator";
 import Resizeable from "./Resizeable";
+import { CellProps } from "./CodeCell";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 
-const McodeCell = () => {
-  const [code, setCode] = useState<string>("");
-  const [input, setInput] = useState<string>("");
-  const [error, setError] = useState<string>("");
+const McodeCell: React.FC<CellProps> = ({ cell }) => {
+  const { updateCell, bundleAction } = useActions();
+  const bundle = useTypedSelector((state) => state.bundles[cell.id]);
 
   // const handleClick = async () => {
   //   console.log("inside bundle");
@@ -16,14 +17,17 @@ const McodeCell = () => {
   //   setCode(transpiledCode);
   //   // console.log(code);
   // };
+
   useEffect(() => {
+    if (!bundle) {
+      bundleAction(cell.id, cell.content);
+      return;
+    }
     const timer = setTimeout(async () => {
-      const transpiledCode = await bundle(input);
-      setCode(transpiledCode.code);
-      setError(transpiledCode.error);
+      bundleAction(cell.id, cell.content);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [input]);
+  }, [cell.content, cell.id, bundleAction]);
 
   const defaultValue = "const a = 1";
   return (
@@ -62,7 +66,7 @@ const McodeCell = () => {
         >
           <CodeEditor
             defaultValue={defaultValue}
-            onChange={(value) => setInput(value)}
+            onChange={(value) => updateCell(cell.id, value)}
           />
           {/* <button type="button" onClick={handleClick}>
             Submit
@@ -71,7 +75,7 @@ const McodeCell = () => {
         </div>
       </Resizeable>
       <Resizeable direction="vertical">
-        <Preview code={code} bundlingStatus={error} />
+        {bundle && <Preview code={bundle.code} bundlingStatus={bundle.err} />}
       </Resizeable>
     </>
   );

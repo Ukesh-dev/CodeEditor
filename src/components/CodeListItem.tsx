@@ -8,8 +8,6 @@ interface CodeListProps {
 }
 
 const CodeListItem: React.FC<CodeListProps> = ({ cell }) => {
-  console.log("inside cell in tghe ");
-  console.log(cell);
   let child: JSX.Element;
   if (cell.type === "code") {
     child = (
