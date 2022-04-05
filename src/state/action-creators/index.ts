@@ -1,3 +1,4 @@
+import localforage from "localforage";
 import { Dispatch } from "redux";
 import bundle from "../../bundle";
 import { ActionType } from "../action-types";
@@ -9,7 +10,13 @@ import {
   UpdateCellAction,
   Action,
 } from "../actions";
-import { CellTypes } from "../cell";
+import { Cell, CellTypes } from "../cell";
+import { RootState } from "../reducer";
+import { CellState } from "../reducer/codeCellreducer";
+
+const cellSaved = localforage.createInstance({
+  name: "cellSaved",
+});
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
@@ -48,4 +55,22 @@ export const bundleAction =
     const result = await bundle(input);
 
     dispatch({ type: ActionType.BUNDLE_COMPLETE, payload: { id, ...result } });
+  };
+
+export const fetchCells = () => async (dispatch: Dispatch<Action>) => {
+  const data = await cellSaved.getItem<Cell[]>("cells");
+  console.log(data);
+  // return data?.["data"];
+  dispatch({ type: ActionType.FETCH_CELLS, payload: data ?? [] });
+};
+
+export const saveCells =
+  () => async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    console.log("inside timer");
+    const {
+      cells: { data, order },
+    } = getState();
+    const cells = order.map((id) => data[id]);
+    cellSaved.setItem("cells", cells);
+    // dispatch({ type: ActionType.SAVE_CELLS, payload: cells });
   };

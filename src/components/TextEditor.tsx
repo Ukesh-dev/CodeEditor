@@ -21,8 +21,9 @@ const TextEditor: React.FC<{ cell: Cell }> = ({ cell }) => {
     };
     document.addEventListener("click", listener, { capture: true });
 
-    return () =>
+    return () => {
       document.removeEventListener("click", listener, { capture: true });
+    };
   }, []);
 
   if (editing) {

@@ -134,9 +134,9 @@ const codeCellReducer = (
       case ActionType.MOVE_CELL:
         const { direction } = action.payload;
         const index = state.order.findIndex((id) => id === action.payload.id);
-        console.log(state.order);
-        console.log(draft);
-        console.log(index);
+        // console.log(state.order);
+        // console.log(draft);
+        // console.log(index);
         const targetIndex = direction === "up" ? index - 1 : index + 1;
         // console.log(targetIndex);
 
@@ -162,6 +162,18 @@ const codeCellReducer = (
       //     };
       // default:
       //   return draft;
+      case ActionType.FETCH_CELLS:
+        console.log("inside fetch");
+        draft.order = action.payload.map((cell) => cell.id);
+        draft.data = action.payload.reduce((acc, crr) => {
+          acc[crr.id] = crr;
+          return acc;
+        }, {} as CellState["data"]);
+
+        break;
+
+      // case ActionType.SAVE_CELLS:
+      //   cellSaved.setItem("SavedCells", action.payload);
     }
   });
 };
