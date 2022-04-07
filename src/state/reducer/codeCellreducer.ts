@@ -122,9 +122,14 @@ const codeCellReducer = (
 
       case ActionType.DELETE_CELL:
         // ! State updated with Immer
-        draft.tutorial.filter((id) => id !== action.payload);
-        console.log(state.tutorial);
+        if (action.payload === "code" || "text") {
+          console.log(state.tutorial);
+          console.log(action.payload);
+          draft.tutorial = draft.tutorial.filter((id) => id !== action.payload);
+          console.log(state.tutorial);
+        }
         if (draft.tutorial.length === 0) {
+          console.log("inside 0 0 0 ");
           localStorage.setItem("show", "false");
           localStorage.setItem("tutorial", JSON.stringify([]));
         }
