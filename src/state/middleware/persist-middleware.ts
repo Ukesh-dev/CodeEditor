@@ -16,10 +16,17 @@ export const persistMiddleware = ({
     next(action);
     if (
       [
+<<<<<<< HEAD
         ActionType.INSERT_CELL_AFTER,
         ActionType.MOVE_CELL,
         ActionType.DELETE_CELL,
         ActionType.UPDATE_CELL,
+=======
+        ActionType.MOVE_CELL,
+        ActionType.UPDATE_CELL,
+        ActionType.INSERT_CELL_AFTER,
+        ActionType.DELETE_CELL,
+>>>>>>> da39b7c02f243f76bb91448a944f52ffff2e2b0a
       ].includes(action.type)
     ) {
       if (timer) {

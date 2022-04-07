@@ -10,7 +10,6 @@ const CodeList = () => {
   const cell = useTypedSelector(({ cells: { data, order } }) =>
     order.map((id) => data[id])
   );
-  const cellState = useTypedSelector(({ cells }) => cells);
   //   const dispatch = useDispatch();
   //   dispatch(actionCreator.updateCell("fwefw", "wefwef"));
   //   const { insertCellBefore } = useActions();
@@ -24,6 +23,15 @@ const CodeList = () => {
     saveCells();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(cell)]);
+
+  useEffect(() => {
+    console.log("im fetching");
+    fetchCells();
+  }, []);
+
+  // useEffect(() => {
+  //   saveCells();
+  // }, [JSON.stringify(cell)]);
 
   const renderedCells = cell.map((cell) => (
     <React.Fragment key={cell.id}>

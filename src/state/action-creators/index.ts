@@ -12,6 +12,14 @@ import {
 } from "../actions";
 import { Cell, CellTypes } from "../cell";
 import { RootState } from "../reducer";
+<<<<<<< HEAD
+=======
+import { CellState } from "../reducer/codeCellreducer";
+
+const cellSaved = localforage.createInstance({
+  name: "cellSaved",
+});
+>>>>>>> da39b7c02f243f76bb91448a944f52ffff2e2b0a
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
@@ -52,15 +60,29 @@ export const bundleAction =
     dispatch({ type: ActionType.BUNDLE_COMPLETE, payload: { id, ...result } });
   };
 
+<<<<<<< HEAD
 const cellSaved = localforage.createInstance({
   name: "saveCell",
 });
 export const saveCells =
   () => async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+=======
+export const fetchCells = () => async (dispatch: Dispatch<Action>) => {
+  const data = await cellSaved.getItem<Cell[]>("cells");
+  console.log(data);
+  // return data?.["data"];
+  dispatch({ type: ActionType.FETCH_CELLS, payload: data ?? [] });
+};
+
+export const saveCells =
+  () => async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    console.log("inside timer");
+>>>>>>> da39b7c02f243f76bb91448a944f52ffff2e2b0a
     const {
       cells: { data, order },
     } = getState();
     const cells = order.map((id) => data[id]);
+<<<<<<< HEAD
     cellSaved.setItem("cellSaved", cells);
   };
 const tutorialCells = localforage.createInstance({
@@ -124,4 +146,8 @@ export const fetchCells =
     }
 
     dispatch({ type: ActionType.FETCH_CELLS, payload: cellItems ?? [] });
+=======
+    cellSaved.setItem("cells", cells);
+    // dispatch({ type: ActionType.SAVE_CELLS, payload: cells });
+>>>>>>> da39b7c02f243f76bb91448a944f52ffff2e2b0a
   };

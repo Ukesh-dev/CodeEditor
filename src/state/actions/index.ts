@@ -52,7 +52,7 @@ export interface FetchCellAction {
 }
 export interface AddTutorialAction {
   type: ActionType.ADD_TUTORIAL;
-  payload: ["code", "text"];
+  payload: ["code"];
 }
 
 // export interface SaveCellAction {
