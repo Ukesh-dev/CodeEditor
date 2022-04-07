@@ -91,9 +91,12 @@ const Preview: React.FC<PreviewProps> = ({ code, bundlingStatus }) => {
 
   useEffect(() => {
     iframe.current.srcdoc = html;
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       iframe.current.contentWindow.postMessage(code, "*");
     }, 50);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [code]);
 
   return (

@@ -13,7 +13,11 @@ const Resizeable: React.FC<ResizableProps> = ({ children, direction }) => {
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   useEffect(() => {
     let timer: any;
+    let cancel = false;
     const listener = () => {
+      if (cancel) {
+        return;
+      }
       if (timer) {
         clearTimeout(timer);
       }
@@ -26,7 +30,10 @@ const Resizeable: React.FC<ResizableProps> = ({ children, direction }) => {
       }, 50);
     };
     window.addEventListener("resize", listener);
-    return () => window.removeEventListener("resize", listener);
+    return () => {
+      window.removeEventListener("resize", listener);
+      cancel = true;
+    };
   }, [width]);
 
   if (direction === "horizontal") {

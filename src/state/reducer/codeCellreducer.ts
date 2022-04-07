@@ -1,7 +1,7 @@
 import produce from "immer";
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
-import { Cell } from "../cell";
+import { Cell, CellTypes } from "../cell";
 
 export type CellState = {
   loading: boolean;
@@ -10,6 +10,7 @@ export type CellState = {
   };
   order: string[];
   error: string | null;
+  tutorial: CellTypes[];
 };
 
 export const initialState: CellState = {
@@ -17,6 +18,7 @@ export const initialState: CellState = {
   error: null,
   order: [],
   data: {},
+  tutorial: [],
 };
 
 // const codeCellReducer = (
@@ -120,6 +122,12 @@ const codeCellReducer = (
 
       case ActionType.DELETE_CELL:
         // ! State updated with Immer
+        draft.tutorial.filter((id) => id !== action.payload);
+        console.log(state.tutorial);
+        if (draft.tutorial.length === 0) {
+          localStorage.setItem("show", "false");
+          localStorage.setItem("tutorial", JSON.stringify([]));
+        }
         delete draft.data[action.payload];
         draft.order = draft.order.filter((id) => id !== action.payload);
 
@@ -162,6 +170,26 @@ const codeCellReducer = (
       //     };
       // default:
       //   return draft;
+
+      case ActionType.FETCH_CELLS:
+        if (
+          !localStorage.getItem("tutorial") &&
+          localStorage.getItem("show") === "true"
+        ) {
+          draft.tutorial.push("code", "text");
+        }
+        draft.order = action.payload.map((cell) => cell.id);
+        draft.data = action.payload.reduce((acc, crr) => {
+          acc[crr.id] = crr;
+          return acc;
+        }, {} as CellState["data"]);
+        break;
+
+      case ActionType.ADD_TUTORIAL:
+        if (draft.tutorial.length === 0) {
+          draft.tutorial = [...action.payload];
+        }
+        break;
     }
   });
 };

@@ -9,6 +9,22 @@ import { useTypedSelector } from "../hooks/useTypedSelector";
 const McodeCell: React.FC<CellProps> = ({ cell }) => {
   const { updateCell, bundleAction } = useActions();
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
+  const data = useTypedSelector((state) => {
+    const cumulativeCode = [];
+
+    const { order, data } = state.cells;
+    const orderedCell = order.map((id) => data[id]);
+
+    for (let c of orderedCell) {
+      if (c.type === "code") {
+        cumulativeCode.push(c.content);
+      }
+      if (c.id === cell.id) {
+        break;
+      }
+    }
+    return cumulativeCode;
+  });
 
   // const handleClick = async () => {
   //   console.log("inside bundle");
@@ -20,14 +36,15 @@ const McodeCell: React.FC<CellProps> = ({ cell }) => {
 
   useEffect(() => {
     if (!bundle) {
-      bundleAction(cell.id, cell.content);
+      bundleAction(cell.id, data.join("\n"));
       return;
     }
     const timer = setTimeout(async () => {
-      bundleAction(cell.id, cell.content);
+      bundleAction(cell.id, data.join("\n"));
     }, 1000);
     return () => clearTimeout(timer);
-  }, [cell.content, cell.id, bundleAction]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.join("\n"), cell.id, bundleAction]);
 
   const defaultValue = "const a = 1";
   return (
