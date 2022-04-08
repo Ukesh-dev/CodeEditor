@@ -2,7 +2,7 @@ import "./code-editor.css";
 import "./syntax.css";
 import Editor, { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import prettier from "prettier";
 import parser from "prettier/parser-babel";
 // import { parse } from "@babel/parser";
@@ -12,16 +12,25 @@ import parser from "prettier/parser-babel";
 interface CodeEditorProps {
   defaultValue: string;
   onChange(value: string): void;
+  height: number;
+  setHeight: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function CodeEditor({ defaultValue, onChange }: CodeEditorProps) {
+function CodeEditor({
+  defaultValue,
+  onChange,
+  height,
+  setHeight,
+}: CodeEditorProps) {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  // const height = useContext(HeightContext);
   // const monacoJSXHighlighterRef = useRef<any>();
   const handleEditorChange = (
     value: string | undefined,
     event: monaco.editor.IModelContentChangedEvent
   ) => {
-    if (value) {
+    if (value || value === "") {
       onChange(value);
     }
   };
@@ -33,7 +42,25 @@ function CodeEditor({ defaultValue, onChange }: CodeEditorProps) {
     monaco: Monaco
   ) => {
     editorRef.current = editor;
+    editor.updateOptions({ scrollBeyondLastLine: false });
+    setIsMounted(true);
   };
+  const updateHeight = () => {
+    if (editorRef.current?.getContentHeight()) {
+      const contentHeight = Math.min(
+        500,
+        editorRef.current?.getContentHeight() + 100
+      );
+      setHeight(contentHeight);
+    }
+  };
+  useEffect(() => {
+    if (isMounted) {
+      updateHeight();
+      editorRef.current?.onDidContentSizeChange(updateHeight);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMounted]);
   const onClickFormat = () => {
     const unformatted = editorRef?.current?.getValue();
     if (unformatted) {

@@ -1,3 +1,6 @@
+.resizetWindow{
+  overflow: hidden;
+}
 .react-resizable-handle {
   display: block;
   background-color: #37414b;

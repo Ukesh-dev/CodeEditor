@@ -17,17 +17,13 @@ const CodeList = () => {
   //   insertCellBefore("wefwefwe", "text");
   useEffect(() => {
     fetchCells();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     saveCells();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(cell)]);
-
-  useEffect(() => {
-    console.log("im fetching");
-    fetchCells();
-  }, []);
 
   // useEffect(() => {
   //   saveCells();

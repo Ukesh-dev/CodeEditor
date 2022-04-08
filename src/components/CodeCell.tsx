@@ -15,10 +15,12 @@ export interface CellProps {
 }
 
 const CodeCell: React.FC<CellProps> = ({ cell }) => {
-  const [collapse, setCollapse] = useState<boolean>(true);
+  // const [collapse, setCollapse] = useState<boolean>(true);
   const { updateCell, bundleAction } = useActions();
 
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
+  const cellOrder = useTypedSelector((state) => state.cells.order);
+  // console.log(cellOrder);
   const cumulativeCode = useCumulativeCode(cell.id);
 
   // const handleClick = async () => {
@@ -30,55 +32,44 @@ const CodeCell: React.FC<CellProps> = ({ cell }) => {
   // };
 
   useEffect(() => {
-    let cancel = false;
-    if (cancel) {
-      console.log("cancelled");
-      return;
-    }
+    // console.log("I am bundling *******");
     if (!bundle) {
       bundleAction(cell.id, cumulativeCode);
       return;
     }
     const timer = setTimeout(async () => {
-      if (cancel) {
-        return;
-      }
       bundleAction(cell.id, cumulativeCode);
     }, 1000);
     return () => {
-      cancel = true;
       clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cumulativeCode, cell.id, bundleAction]);
+  }, [cumulativeCode, cellOrder, bundleAction]);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 500px)");
-    let cancel = false;
-    const myFunc = () => {
-      if (cancel) {
-        return;
-      }
-      if (mq.matches) {
-        setCollapse(true);
-      } else {
-        setCollapse(false);
-      }
-    };
-    myFunc();
-    window.addEventListener("resize", myFunc);
-    return () => {
-      window.removeEventListener("resize", myFunc);
-      cancel = true;
-    };
-  }, []);
+  // useEffect(() => {
+  //   const mq = window.matchMedia("(max-width: 500px)");
+  //   const myFunc = () => {
+  //     if (mq.matches) {
+  //       setCollapse(true);
+  //     } else {
+  //       setCollapse(false);
+  //     }
+  //   };
+  //   myFunc();
+  //   window.addEventListener("resize", myFunc);
+  //   return () => {
+  //     window.removeEventListener("resize", myFunc);
+  //   };
+  // }, []);
+
+  const [height, setHeight] = useState<number>(40);
 
   // const defaultValue = "const a = 1";
   return (
     <>
       {/* //! from here to */}
       {/* {!collapse ? ( */}
-      <Resizeable direction="vertical">
+      <Resizeable direction="vertical" height={height} setHeight={setHeight}>
         <div
           style={{
             position: "relative",
@@ -88,8 +79,14 @@ const CodeCell: React.FC<CellProps> = ({ cell }) => {
           }}
           className="resizeWindow"
         >
-          <Resizeable direction="horizontal">
+          <Resizeable
+            direction="horizontal"
+            height={height}
+            setHeight={setHeight}
+          >
             <CodeEditor
+              height={height}
+              setHeight={setHeight}
               defaultValue={cell.content}
               onChange={(value) => updateCell(cell.id, value)}
             />

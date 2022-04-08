@@ -3,7 +3,7 @@ export const useCumulativeCode = (cellId: string) => {
   return useTypedSelector((state) => {
     const { order, data } = state.cells;
     const orderedCells = order.map((id) => data[id]);
-    const showfunc = `import {default as _React} from 'react'; import {default as _ReactDOM} from 'react-dom';
+    const showfunc = `import  _React from 'react'; import _ReactDOM from 'react-dom';
         const root = document.getElementById('root'); var show =(value) => {
           if(typeof value === 'object') {
             if(value.$$typeof && value.props ){

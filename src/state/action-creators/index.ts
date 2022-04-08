@@ -12,7 +12,6 @@ import {
 } from "../actions";
 import { Cell, CellTypes } from "../cell";
 import { RootState } from "../reducer";
-import { CellState } from "../reducer/codeCellreducer";
 
 // const cellSaved = localforage.createInstance({
 //   name: "cellSaved",
@@ -53,6 +52,7 @@ export const bundleAction =
   (id: string, input: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ActionType.BUNDLE_START, payload: { id } });
     const result = await bundle(input);
+    console.log("inside bundleAction");
 
     dispatch({ type: ActionType.BUNDLE_COMPLETE, payload: { id, ...result } });
   };
@@ -63,16 +63,13 @@ const cellSaved = localforage.createInstance({
 
 export const saveCells =
   () => async (dispatch: Dispatch<Action>, getState: () => RootState) => {
-    console.log("inside timer");
+    // console.log("inside timer");
     const {
       cells: { data, order },
     } = getState();
     const cells = order.map((id) => data[id]);
     cellSaved.setItem("cellSaved", cells);
   };
-const tutorialCells = localforage.createInstance({
-  name: "tutorialCell",
-});
 
 // export const saveTutorialCells = async () => {
 //   tutorialCells.setItem('tutorialCell', )
@@ -105,19 +102,74 @@ export const fetchCells =
             //   type: ActionType.ADD_TUTORIAL,
             //   payload: ["code", "text"],
             // });
-            console.log("inside localstoreage");
             localStorage.setItem("tutorial", JSON.stringify(["code", "text"]));
             if (cellItems.length === 0) {
               cellItems.push(
                 {
+                  id: "text",
+                  content: `
+# UksBook
+This a interactive coding environment. You can write Javascript, see it executed and write comprehensive documentation using markdown.
+
+
+----------
+
+
+- Click any text (**including this one**)  to edit it.
+- The code in each code editor is joined together.
+- You can show any React Component, string, number, or anything else by calling the \`show()\` function. This function is built into this environment. Call show multiple times to show multiple values.
+- Add new cells by hovering on the divider between each cell.
+
+All of your changes will get saved. So, **No Worries** 
+
+----------
+
+**Keep Coding**
+
+
+
+                  `,
+                  type: "text",
+                },
+                {
                   id: "code",
-                  content: 'console.log("hello")',
+                  content: `
+ import 'bulmaswatch/superhero/bulmaswatch.min.css';
+import { useState } from 'react';
+
+const Counter = () => {
+  const [count, setCount] = useState(0);
+  return (
+    <div
+      style={{
+        fontSize: '2rem',
+        height: '100vh',
+        display: 'grid',
+        placeItems: 'center',
+        textAlign: 'center',
+        padding: '1rem',
+      }}
+    >
+      <div>
+        <h2>Counter</h2>
+        <button onClick={() => setCount(count + 1)}>Click</button>
+        <h2>{count}</h2>
+      </div>
+    </div>
+  );
+};
+show(<Counter />);
+
+
+                  `,
                   type: "code",
                 },
                 {
-                  id: "text",
-                  content: 'console.log("hello")',
-                  type: "text",
+                  id: "newcode",
+                  content: `
+
+show(<Counter/>)`,
+                  type: "code",
                 }
               );
               dispatch({

@@ -4,14 +4,12 @@ export const unpkgPathPlugin = () => ({
   name: "unpkgplugin",
   setup(build: esbuild.PluginBuild) {
     build.onResolve({ filter: /(^index\.js$)/ }, () => {
-      console.log("resovle 1");
       return {
         path: "index.js",
         namespace: "a",
       };
     });
     build.onResolve({ filter: /^\.+\// }, async (args) => {
-      console.log("resovle 2");
       return {
         path: new URL(args.path, `https://unpkg.com${args.resolveDir}/`).href,
         // path: new URL(args.path, `${args.importer}/`).href,

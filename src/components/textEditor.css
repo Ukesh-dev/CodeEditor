@@ -1,6 +1,10 @@
 .w-md-editor {
   margin-top: 0.9rem;
 }
+.wmde-markdown ul{
+  list-style: disc;
+
+}
 
 .w-md-editor-bar svg {
   display: none;

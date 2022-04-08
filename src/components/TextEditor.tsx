@@ -8,7 +8,6 @@ import "./textEditor.css";
 const TextEditor: React.FC<{ cell: Cell }> = ({ cell }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [editing, setEditing] = useState<boolean>(false);
-  const [value, setValue] = useState<string>("# Hello World!");
   const { updateCell } = useActions();
 
   useEffect(() => {
@@ -31,7 +30,7 @@ const TextEditor: React.FC<{ cell: Cell }> = ({ cell }) => {
       <div ref={ref}>
         <MdEditor
           value={cell.content}
-          onChange={(val) => updateCell(cell.id, val || "Click to Add")}
+          onChange={(val) => updateCell(cell.id, val || "")}
         />
       </div>
     );

@@ -1,5 +1,4 @@
 import produce from "immer";
-import { DRAFT_STATE } from "immer/dist/internal";
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
 
@@ -38,7 +37,7 @@ export const bundleReducers = (
           code: action.payload.code,
         };
         break;
-      default:
-        return draft;
+      // default:
+      //   return draft;
     }
   });

@@ -6,11 +6,6 @@ const fileCache = localforage.createInstance({
   name: "filecache",
 });
 
-const myString = "This is At the home";
-const regext = /at/gi;
-const regex = regext.test(myString);
-console.log(regex);
-
 export const fetchPlugin = (inputCode: string) => ({
   name: "fetch-plugin",
   setup(build: esbuild.PluginBuild) {
@@ -25,7 +20,6 @@ export const fetchPlugin = (inputCode: string) => ({
 
     build.onLoad({ filter: /\.css$/ }, async (args: any) => {
       const { data, request } = await axios.get(args.path);
-      console.log("inside css bithc");
       const escapedData = data
         .replace(/"/g, '\\"')
         .replace(/\n/g, "")

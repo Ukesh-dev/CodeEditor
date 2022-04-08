@@ -147,15 +147,12 @@ const codeCellReducer = (
       case ActionType.MOVE_CELL:
         const { direction } = action.payload;
         const index = state.order.findIndex((id) => id === action.payload.id);
-        console.log(state.order);
-        console.log(draft);
-        console.log(index);
         const targetIndex = direction === "up" ? index - 1 : index + 1;
         // console.log(targetIndex);
 
         if (targetIndex < 0 || targetIndex > draft.order.length - 1) {
           console.log("can't run man");
-          return draft;
+          return;
         }
         draft.order[index] = draft.order[targetIndex];
         draft.order[targetIndex] = action.payload.id;
