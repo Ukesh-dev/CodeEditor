@@ -109,7 +109,7 @@ export const fetchCells =
                   id: "text",
                   content: `
 # UksBook
-This a interactive coding environment. You can write Javascript, see it executed and write comprehensive documentation using markdown.
+This is a interactive coding environment. You can write Javascript, see it executed and write comprehensive documentation using markdown.
 
 
 ----------
