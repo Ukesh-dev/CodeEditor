@@ -1,106 +1,143 @@
-// import { useEffect } from "react";
-// import CodeEditor from "../components/CodeEditor";
-// import Preview from "../components/preview";
-// import { useActions } from "../hooks/useActionCreator";
-// import Resizeable from "./Resizeable";
-// import { CellProps } from "./CodeCell";
-// import { useTypedSelector } from "../hooks/useTypedSelector";
+import "./progressBar.css";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+// import "bulmaswatch/superhero/bulmaswatch.min.css";
+import CodeEditor from "../components/CodeEditor";
+import Preview from "../components/preview";
+import { useActions } from "../hooks/useActionCreator";
+import { Cell } from "../state";
+import { useTypedSelector } from "../hooks/useTypedSelector";
+import { useCumulativeCode } from "../hooks/useCumulativeCode";
+import Mresizeable from "./m.Resizeable";
 
-// const McodeCell: React.FC<CellProps> = ({ cell }) => {
-//   const { updateCell, bundleAction } = useActions();
-//   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
-//   const data = useTypedSelector((state) => {
-//     const cumulativeCode = [];
+export interface CellProps {
+  cell: Cell;
+}
+export const useSafeDispatch = (dispatch: (...args: any) => void) => {
+  const mountRef = useRef(false);
+  // console.log(mountRef.current);
+  // const [show, setShow] = useState(false);
 
-//     const { order, data } = state.cells;
-//     const orderedCell = order.map((id) => data[id]);
+  useLayoutEffect(() => {
+    mountRef.current = true;
+    return () => {
+      mountRef.current = false;
+      // setShow(false);
+    };
+  }, []);
 
-//     for (let c of orderedCell) {
-//       if (c.type === "code") {
-//         cumulativeCode.push(c.content);
-//       }
-//       if (c.id === cell.id) {
-//         break;
-//       }
-//     }
-//     return cumulativeCode;
-//   });
-
-//   // const handleClick = async () => {
-//   //   console.log("inside bundle");
-//   //   console.log("input: " + input);
-//   //   const transpiledCode = await bundle(input);
-//   //   setCode(transpiledCode);
-//   //   // console.log(code);
-//   // };
-
-//   useEffect(() => {
-//     if (!bundle) {
-//       bundleAction(cell.id, data.join("\n"));
-//       return;
-//     }
-//     const timer = setTimeout(async () => {
-//       bundleAction(cell.id, data.join("\n"));
-//     }, 1000);
-//     return () => clearTimeout(timer);
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [data.join("\n"), cell.id, bundleAction]);
-
-//   const defaultValue = "const a = 1";
-//   return (
-//     <>
-//       {/* //! from here to */}
-//       {/* <Resizeable direction="vertical" collapse={collapse}>
-//         <div
-//           style={{
-//             position: "relative",
-//             display: "flex",
-//             width: "100%",
-//             height: "100%",
-//           }}
-//           className="resizeWindow"
-//         >
-//           <Resizeable direction="horizontal" collapse={collapse}>
-//             <CodeEditor
-//               defaultValue={defaultValue}
-//               onChange={(value) => setInput(value)}
-//             />
-//           </Resizeable>
-//           {/* {!collapse && <Preview code={code} bundlingStatus={error} />} */}
-//       {/* <Preview code={code} bundlingStatus={error} />
-//         </div>
-//       </Resizeable> */}
-//       {/* {collapse && <Preview code={code} bundlingStatus={error} />} */}
-//       <Resizeable direction="vertical">
-//         <div
-//           style={{
-//             position: "relative",
-//             display: "flex",
-//             width: "100%",
-//             height: "calc(100% - 10px)",
-//           }}
-//           className="resizeWindow"
-//         >
-//           <CodeEditor
-//             defaultValue={defaultValue}
-//             onChange={(value) => updateCell(cell.id, value)}
-//           />
-//           {/* <button type="button" onClick={handleClick}>
-//             Submit
-//           </button> */}
-//           {/* {!collapse && <Preview code={code} bundlingStatus={error} />} */}
-//         </div>
-//       </Resizeable>
-//       <Resizeable direction="vertical">
-//         {bundle && <Preview code={bundle.code} bundlingStatus={bundle.err} />}
-//       </Resizeable>
-//     </>
-//   );
-// };
-
-// export default McodeCell;
-
-const McodeCell = () => {
-  return <div>hello</div>;
+  return useCallback(
+    (...args) => {
+      if (mountRef.current === true) {
+        dispatch(...args);
+        // setShow(true);
+      }
+      return void 0;
+    },
+    [dispatch]
+  );
 };
-export default McodeCell;
+
+export const useSafeResize = () => {
+  const resizeRef = useRef(false);
+  let show = false;
+
+  useLayoutEffect(() => {
+    resizeRef.current = true;
+    return () => {
+      resizeRef.current = false;
+    };
+  }, []);
+
+  if (resizeRef.current === true) {
+    show = true;
+  } else {
+    show = false;
+  }
+  // console.log(`%cshow: ${show}`, "color: red; background: black;");
+  return show;
+};
+
+const CodeCell: React.FC<CellProps> = ({ cell }) => {
+  // const [collapse, setCollapse] = useState<boolean>(true);
+  // const { updateCell: unsafeupdateCell, bundleAction: unsafebundleAction } =
+  //   useActions();
+
+  const { updateCell, bundleAction } = useActions();
+  // const updateCell = useSafeDispatch(unsafeupdateCell);
+  // console.log(updateCell);
+  // const bundleAction = useSafeDispatch(unsafebundleAction);
+
+  const bundle = useTypedSelector((state) => state.bundles[cell.id]);
+  const cellOrder = useTypedSelector((state) => state.cells.order);
+  // console.log(cellOrder);
+  const cumulativeCode = useCumulativeCode(cell.id);
+
+  // const handleClick = async () => {
+  //   console.log("inside bundle");
+  //   console.log("input: " + input);
+  //   const transpiledCode = await bundle(input);
+  //   setCode(transpiledCode);
+  //   // console.log(code);
+  // };
+  // const show = true;
+
+  useEffect(() => {
+    if (!bundle) {
+      bundleAction(cell.id, cumulativeCode);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      bundleAction(cell.id, cumulativeCode);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cumulativeCode, cellOrder, bundleAction, cell.id]);
+
+  const [height, setHeight] = useState<number>(40);
+
+  // const defaultValue = "const a = 1";
+  return (
+    <>
+      {/* //! from here to */}
+
+      <Mresizeable direction="horizontal" height={height} setHeight={setHeight}>
+        <div className="resizeWindow">
+          <Mresizeable
+            direction="vertical"
+            height={height}
+            setHeight={setHeight}
+          >
+            <CodeEditor
+              height={height}
+              setHeight={setHeight}
+              defaultValue={cell.content}
+              onChange={(value) => updateCell(cell.id, value)}
+            />
+          </Mresizeable>
+          {/* {!collapse && <Preview code={code} bundlingStatus={error} />} */}
+          <div className="progress-bar-cover">
+            {!bundle || bundle.loading ? (
+              <div className="progress-bar-wrapper">
+                <progress className="progress is-small is-primary"></progress>
+              </div>
+            ) : (
+              bundle && (
+                <Preview code={bundle.code} bundlingStatus={bundle.err} />
+              )
+            )}
+          </div>
+        </div>
+      </Mresizeable>
+    </>
+  );
+};
+
+export default CodeCell;

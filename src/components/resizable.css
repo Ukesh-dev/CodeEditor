@@ -1,5 +1,8 @@
-.resizetWindow{
+.resizetWindow {
   overflow: hidden;
+  position: relative;
+  display: "flex";
+  width: "100%";
 }
 .react-resizable-handle {
   display: block;
@@ -19,11 +22,18 @@
   display: flex;
 }
 
-/* @media (max-width: 400px) {
+@media (max-width: 500px) {
+  .resize-horizontal {
+    width: 100% !important;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 400px) {
   .resizeWindow {
     flex-direction: column;
   }
-} */
+}
 
 .react-resizable-handle-e {
   height: 100%;
@@ -32,8 +42,8 @@
   background-image: url(/public/download.png);
 }
 
-/* @media only screen and (max-width: 300px) {
+@media only screen and (max-width: 300px) {
   .react-resizable-handle-e {
     display: none;
   }
-} */
+}

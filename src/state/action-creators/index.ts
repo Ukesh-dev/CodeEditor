@@ -143,7 +143,7 @@ const Counter = () => {
     <div
       style={{
         fontSize: '2rem',
-        height: '100vh',
+        // height: '100vh',
         display: 'grid',
         placeItems: 'center',
         textAlign: 'center',

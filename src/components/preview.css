@@ -6,11 +6,11 @@
   /* margin-top: 10px; */
 }
 
-/* @media (max-width: 500) {
+@media (max-width: 500) {
   #iframe-wrapper {
     width: 100vw;
   }
-} */
+}
 
 #iframe-wrapper > iframe {
   /* background: white; */

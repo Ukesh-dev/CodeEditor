@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CodeEditor from "../components/CodeEditor";
 import Preview from "../components/preview";
 import Resizeable from "./Resizeable";
-// import McodeCell from "./m.CodeCell";
+import McodeCell from "./m.CodeCell";
 import { useActions } from "../hooks/useActionCreator";
 import { Cell } from "../state";
 import { useTypedSelector } from "../hooks/useTypedSelector";
@@ -15,8 +15,14 @@ export interface CellProps {
 }
 
 const CodeCell: React.FC<CellProps> = ({ cell }) => {
-  // const [collapse, setCollapse] = useState<boolean>(true);
+  const [collapse, setCollapse] = useState<boolean>(true);
+  // const { updateCell: unsafeupdateCell, bundleAction: unsafebundleAction } =
+  //   useActions();
+
   const { updateCell, bundleAction } = useActions();
+
+  // const updateCell = useSafeDispatch(unsafeupdateCell);
+  // const bundleAction = useSafeDispatch(unsafebundleAction);
 
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
   const cellOrder = useTypedSelector((state) => state.cells.order);
@@ -46,21 +52,23 @@ const CodeCell: React.FC<CellProps> = ({ cell }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cumulativeCode, cellOrder, bundleAction]);
 
-  // useEffect(() => {
-  //   const mq = window.matchMedia("(max-width: 500px)");
-  //   const myFunc = () => {
-  //     if (mq.matches) {
-  //       setCollapse(true);
-  //     } else {
-  //       setCollapse(false);
-  //     }
-  //   };
-  //   myFunc();
-  //   window.addEventListener("resize", myFunc);
-  //   return () => {
-  //     window.removeEventListener("resize", myFunc);
-  //   };
-  // }, []);
+  // const show = updateCell === null ? false : true;
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 500px)");
+    const myFunc = () => {
+      if (mq.matches) {
+        setCollapse(true);
+      } else {
+        setCollapse(false);
+      }
+    };
+    myFunc();
+    window.addEventListener("resize", myFunc);
+    return () => {
+      window.removeEventListener("resize", myFunc);
+    };
+  }, []);
 
   const [height, setHeight] = useState<number>(40);
 
@@ -68,47 +76,47 @@ const CodeCell: React.FC<CellProps> = ({ cell }) => {
   return (
     <>
       {/* //! from here to */}
-      {/* {!collapse ? ( */}
-      <Resizeable direction="vertical" height={height} setHeight={setHeight}>
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            width: "100%",
-            height: "100%",
-          }}
-          className="resizeWindow"
-        >
-          <Resizeable
-            direction="horizontal"
-            height={height}
-            setHeight={setHeight}
+      {!collapse ? (
+        <Resizeable direction="vertical" height={height} setHeight={setHeight}>
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              width: "100%",
+              height: "100%",
+            }}
+            className="resizeWindow"
           >
-            <CodeEditor
+            <Resizeable
+              direction="horizontal"
               height={height}
               setHeight={setHeight}
-              defaultValue={cell.content}
-              onChange={(value) => updateCell(cell.id, value)}
-            />
-          </Resizeable>
-          {/* {!collapse && <Preview code={code} bundlingStatus={error} />} */}
-          <div className="progress-bar-cover">
-            {!bundle || bundle.loading ? (
-              <div className="progress-bar-wrapper">
-                <progress className="progress is-small is-primary"></progress>
-              </div>
-            ) : (
-              bundle && (
-                <Preview code={bundle.code} bundlingStatus={bundle.err} />
-              )
-            )}
+            >
+              <CodeEditor
+                height={height}
+                setHeight={setHeight}
+                defaultValue={cell.content}
+                onChange={(value) => updateCell(cell.id, value)}
+              />
+            </Resizeable>
+            {/* {!collapse && <Preview code={code} bundlingStatus={error} />} */}
+            <div className="progress-bar-cover">
+              {!bundle || bundle.loading ? (
+                <div className="progress-bar-wrapper">
+                  <progress className="progress is-small is-primary"></progress>
+                </div>
+              ) : (
+                bundle && (
+                  <Preview code={bundle.code} bundlingStatus={bundle.err} />
+                )
+              )}
+            </div>
           </div>
-        </div>
-      </Resizeable>
+        </Resizeable>
+      ) : (
+        <McodeCell cell={cell} />
+      )}
     </>
-    // // : (
-    //   <McodeCell cell={cell} />
-    // )} */}
   );
 };
 

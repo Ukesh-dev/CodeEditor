@@ -6,6 +6,12 @@
   /* flex-basis: calc(60% - 10px); */
 }
 
+@media (max-width: 500px) {
+  .editor-wrapper {
+    width: 100%;
+  }
+}
+
 .editor-wrapper .button-format {
   position: absolute;
   top: 5px;

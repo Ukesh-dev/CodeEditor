@@ -3,6 +3,14 @@
   flex-grow: 1;
   background: white;
 }
+
+@media (max-width: 500px) {
+  .progress-bar-cover {
+    margin-top: 10px;
+    height: calc(100% - 10px);
+  }
+}
+
 .progress-bar-wrapper {
   height: 100%;
   text-align: center;
